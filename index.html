@@ -42,7 +42,7 @@
       max-width: 260px;
       height: auto;
       margin-bottom: 8px;
-      filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.4));
+      filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.6));
     }
     #clock {
       font-size: 1.1rem;
@@ -52,16 +52,16 @@
       text-shadow: 0 0 8px rgba(0,0,0,0.5);
     }
 
-    /* Glassmorphism Card Container */
+    /* Glassmorphism Card Container with Neon Glow */
     .kiosk-card {
       background: rgba(15, 23, 42, 0.75);
       backdrop-filter: blur(16px);
-      border: 1px solid rgba(56, 189, 248, 0.3);
+      border: 1px solid rgba(56, 189, 248, 0.4);
       border-radius: 24px;
       padding: 24px;
       width: 100%;
       max-width: 480px;
-      box-shadow: 0 0 35px rgba(56, 189, 248, 0.25), 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 0 35px rgba(56, 189, 248, 0.3), 0 20px 25px -5px rgba(0, 0, 0, 0.5);
       position: relative;
     }
 
@@ -69,6 +69,7 @@
     .scanner-wrapper {
       position: relative;
       width: 100%;
+      min-height: 300px;
       border-radius: 16px;
       overflow: hidden;
       background: #090d16;
@@ -229,13 +230,15 @@
         });
     }
 
-    // Start Camera Feed
-    const html5QrcodeScanner = new Html5QrcodeScanner(
-      "reader",
-      { fps: 15, qrbox: { width: 250, height: 250 } },
-      /* verbose= */ false
-    );
-    html5QrcodeScanner.render(onScanSuccess);
+    // Initialize Camera Feed safely
+    window.addEventListener("load", () => {
+      const html5QrcodeScanner = new Html5QrcodeScanner(
+        "reader",
+        { fps: 15, qrbox: { width: 250, height: 250 } },
+        /* verbose= */ false
+      );
+      html5QrcodeScanner.render(onScanSuccess);
+    });
   </script>
 </body>
 </html>
