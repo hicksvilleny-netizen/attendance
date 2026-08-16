@@ -1,156 +1,307 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Attendance Kiosk</title>
-  <!-- Load HTML5-QRCode Library -->
-  <script src="https://unpkg.com/html5-qrcode"></script>
+  <title>Kumon Attendance Kiosk</title>
+  <!-- Modern Kids-Friendly Font (Fredoka / Inter) -->
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Inter:wght@600;700&display=swap" rel="stylesheet">
+  <!-- HTML5-QRCode Scanner Library -->
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
   <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      background-color: #121212;
+      font-family: 'Fredoka', 'Inter', sans-serif;
+      background: #08111e;
       color: #ffffff;
-      font-family: Arial, sans-serif;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: space-between;
+      padding: 24px 40px;
+      position: relative;
+    }
+
+    /* Kids Doodle Icons in Background */
+    .doodle {
+      position: absolute;
+      font-size: 2.2rem;
+      opacity: 0.8;
+      user-select: none;
+      pointer-events: none;
+      text-shadow: 0 0 10px currentColor;
+    }
+    .doodle.num-5-left  { top: 48%; left: 10%; color: #38ef7d; }
+    .doodle.star-left   { top: 32%; left: 13%; color: #ffeb3b; }
+    .doodle.pencil-left { top: 62%; left: 16%; color: #00f2fe; }
+    .doodle.num-3-right { top: 46%; right: 12%; color: #ff007f; }
+    .doodle.num-5-right { top: 30%; right: 10%; color: #38ef7d; }
+    .doodle.pencil-right{ top: 62%; right: 15%; color: #ffeb3b; }
+
+    /* Header Layout for Landscape */
+    header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      z-index: 2;
+    }
+
+    .logo-container {
+      background: #ffffff;
+      padding: 6px 18px;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+      display: inline-block;
+    }
+
+    /* Using logo image from URL or placeholder */
+    .logo-container img {
+      height: 48px;
+      display: block;
+    }
+
+    header h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #38ef7d;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      text-shadow: 0 0 12px #38ef7d, 0 0 24px #38ef7d;
+    }
+
+    /* Center Section (Camera Viewport) */
+    main {
+      position: relative;
+      width: 380px;
+      height: 260px;
+      display: flex;
+      align-items: center;
       justify-content: center;
-      min-height: 100vh;
-      margin: 0;
+      z-index: 2;
     }
-    .kiosk-card {
-      background: #1e1e1e;
-      border-radius: 16px;
-      padding: 24px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-      text-align: center;
-      width: 90%;
-      max-width: 420px;
+
+    .scanner-wrapper {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 20px;
+      overflow: hidden;
+      background: #020611;
+      box-shadow: 0 0 20px rgba(56, 239, 125, 0.25);
     }
-    h2 { margin-top: 0; font-size: 24px; color: #ffffff; }
-    /* Camera Screen Container */
+
     #reader {
       width: 100%;
-      border-radius: 12px;
-      overflow: hidden;
-      background: #000;
-      margin: 15px 0;
-      min-height: 250px;
+      height: 100%;
+      border: none !important;
     }
-    .status-box {
-      background: #2a2a2a;
-      border-radius: 8px;
-      padding: 12px;
-      margin-top: 10px;
+
+    #reader video {
+      object-fit: cover !important;
+      width: 100% !important;
+      height: 100% !important;
+      border-radius: 18px;
     }
-    .status-sub { font-size: 12px; color: #aaa; letter-spacing: 1px; }
-    .status-main { font-size: 22px; font-weight: bold; margin: 5px 0; color: #4caf50; }
-    .status-desc { font-size: 14px; color: #ccc; }
+
+    /* Green Neon Corner Framing Overlay */
+    .scanner-frame {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .corner {
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      border-color: #38ef7d;
+      border-style: solid;
+      filter: drop-shadow(0 0 8px #38ef7d);
+    }
+    .top-left     { top: 8px; left: 8px; border-width: 5px 0 0 5px; border-top-left-radius: 12px; }
+    .top-right    { top: 8px; right: 8px; border-width: 5px 5px 0 0; border-top-right-radius: 12px; }
+    .bottom-left  { bottom: 8px; left: 8px; border-width: 0 0 5px 5px; border-bottom-left-radius: 12px; }
+    .bottom-right { bottom: 8px; right: 8px; border-width: 0 5px 5px 0; border-bottom-right-radius: 12px; }
+
+    /* Sweeping Laser Scan Line */
+    .laser-line {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #38ef7d, transparent);
+      box-shadow: 0 0 15px #38ef7d, 0 0 25px #38ef7d;
+      animation: scanSweep 2.2s infinite ease-in-out;
+      z-index: 11;
+      pointer-events: none;
+    }
+
+    @keyframes scanSweep {
+      0% { top: 8%; opacity: 0.3; }
+      50% { top: 88%; opacity: 1; }
+      100% { top: 8%; opacity: 0.3; }
+    }
+
+    /* Footer / System Status Banner */
+    footer {
+      width: 100%;
+      max-width: 640px;
+      z-index: 2;
+    }
+
+    #status-card {
+      background: rgba(8, 28, 44, 0.85);
+      border: 2px solid #38ef7d;
+      border-radius: 16px;
+      padding: 12px 24px;
+      text-align: center;
+      box-shadow: 0 0 15px rgba(56, 239, 125, 0.4);
+      transition: all 0.3s ease;
+    }
+
+    .status-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #00f2fe;
+    }
+
+    .status-title span {
+      color: #38ef7d;
+      text-shadow: 0 0 8px #38ef7d;
+    }
+
+    .status-sub {
+      font-size: 0.95rem;
+      color: #cbd5e1;
+      margin-top: 2px;
+    }
+
+    /* Status Dynamic Themes */
+    .status-success { border-color: #38ef7d !important; box-shadow: 0 0 20px rgba(56, 239, 125, 0.6); }
+    .status-warning { border-color: #ffeb3b !important; box-shadow: 0 0 20px rgba(255, 235, 59, 0.6); }
+    .status-error   { border-color: #ff4b4b !important; box-shadow: 0 0 20px rgba(255, 75, 75, 0.6); }
   </style>
 </head>
 <body>
 
-  <div class="kiosk-card">
-    <h2>Kumon Attendance</h2>
+  <!-- Floating Kids Doodles Background -->
+  <div class="doodle star-left">★</div>
+  <div class="doodle num-5-left">5</div>
+  <div class="doodle pencil-left">✏</div>
+  <div class="doodle num-5-right">5</div>
+  <div class="doodle num-3-right">3</div>
+  <div class="doodle pencil-right">✏</div>
 
-    <!-- Live Webcam Stream Target -->
-    <div id="reader"></div>
-
-    <div class="status-box">
-      <div class="status-sub">SYSTEM STATUS</div>
-      <div id="status-title" class="status-main">READY</div>
-      <div id="status-desc" class="status-desc">Position QR code in front of camera</div>
+  <!-- Header Section -->
+  <header>
+    <div class="logo-container">
+      <!-- Replace src with your local image file or URL if needed -->
+      <img src="https://upload.wikimedia.org/wikipedia/commons/9/9d/Kumon_Logo.svg" alt="Kumon of Hicksville">
     </div>
-  </div>
+    <h1>KUMON ATTENDANCE</h1>
+  </header>
+
+  <!-- Camera Section -->
+  <main>
+    <div class="scanner-wrapper">
+      <div class="scanner-frame">
+        <div class="corner top-left"></div>
+        <div class="corner top-right"></div>
+        <div class="corner bottom-left"></div>
+        <div class="corner bottom-right"></div>
+      </div>
+      <div class="laser-line"></div>
+      <div id="reader"></div>
+    </div>
+  </main>
+
+  <!-- Footer Status Section -->
+  <footer>
+    <div id="status-card" class="status-info">
+      <div class="status-title">System Status: <span>[READY]</span></div>
+      <div id="status-sub" class="status-sub">Position QR code in front of the camera</div>
+    </div>
+  </footer>
 
   <script>
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwAQJNDVFMQ1dZOW_ikEepyPc9H0FWfjTpC5M_iv9QeQNevBY1dG8dDxynw1wy60LcV/exec"; // Paste your Web App URL here
-    let isProcessing = false;
+    const APPS_SCRIPT_URL = "YOUR_WEBAPP_URL_HERE";
+    let isScanningPaused = false;
 
-    // Detect camera devices and launch video feed
-    Html5Qrcode.getCameras().then(devices => {
-      if (devices && devices.length) {
-        let cameraId = devices[0].id;
-        for (let dev of devices) {
-          if (dev.label.toLowerCase().includes("front") || 
-              dev.label.toLowerCase().includes("user") || 
-              dev.label.toLowerCase().includes("integrated")) {
-            cameraId = dev.id;
-            break;
-          }
-        }
-
-        const html5QrCode = new Html5Qrcode("reader");
-        html5QrCode.start(
-          cameraId,
-          { fps: 10, qrbox: { width: 220, height: 220 } },
-          onScanSuccess
-        ).catch(err => {
-          document.getElementById("status-title").innerText = "CAMERA ERROR";
-          document.getElementById("status-desc").innerText = "Unable to start camera stream.";
-        });
-      } else {
-        document.getElementById("status-title").innerText = "NO CAMERA";
-        document.getElementById("status-desc").innerText = "No camera hardware detected.";
+    function playBeep(freq = 880, type = 'sine', duration = 0.15) {
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.value = freq;
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {
+        console.warn("Audio Context error:", e);
       }
-    }).catch(err => {
-      document.getElementById("status-title").innerText = "PERMISSIONS BLOCKED";
-      document.getElementById("status-desc").innerText = "Allow camera access in site settings.";
-    });
+    }
+
+    function showStatus(titleMsg, subMsg = "", theme = 'info') {
+      const card = document.getElementById("status-card");
+      const titleElem = card.querySelector(".status-title");
+      const subElem = document.getElementById("status-sub");
+
+      card.className = "status-" + theme;
+      titleElem.innerHTML = titleMsg;
+      subElem.innerText = subMsg;
+    }
 
     function onScanSuccess(decodedText) {
-      if (isProcessing) return;
-      isProcessing = true;
+      if (isScanningPaused) return;
 
-      const studentId = decodedText.split(/[^0-9]/)[0];
-      if (!studentId) {
-        isProcessing = false;
-        return;
-      }
+      isScanningPaused = true;
+      playBeep(880, 'sine', 0.12);
+      showStatus("Processing...", "Logging scan into system...", "info");
 
-      document.getElementById("status-title").innerText = "PROCESSING...";
-      document.getElementById("status-desc").innerText = "Logging attendance record";
-
-      fetch(`${APPS_SCRIPT_URL}?id=${encodeURIComponent(studentId)}&mode=kiosk`)
+      fetch(`${APPS_SCRIPT_URL}?id=${encodeURIComponent(decodedText)}&mode=kiosk`)
         .then(res => res.json())
         .then(data => {
-          playChime(data.type === "success");
-          document.getElementById("status-title").innerText = data.title || "SUCCESS";
-          document.getElementById("status-desc").innerText = data.message;
+          if (data.status === "success") {
+            playBeep(1200, 'sine', 0.2);
+            showStatus("Welcome!", data.message || "Logged in successfully!", "success");
+          } else if (data.status === "duplicate" || data.status === "warning") {
+            playBeep(440, 'triangle', 0.25);
+            showStatus("Notice", data.message || "Already scanned recently.", "warning");
+          } else {
+            playBeep(220, 'sawtooth', 0.3);
+            showStatus("Error", data.message || "Error processing scan.", "error");
+          }
         })
         .catch(err => {
-          playChime(false);
-          document.getElementById("status-title").innerText = "ERROR";
-          document.getElementById("status-desc").innerText = "Connection failed. Try again.";
+          console.error(err);
+          playBeep(220, 'sawtooth', 0.3);
+          showStatus("Connection Error", "Please try scanning again.", "error");
         })
         .finally(() => {
           setTimeout(() => {
-            isProcessing = false;
-            document.getElementById("status-title").innerText = "READY";
-            document.getElementById("status-desc").innerText = "Position QR code in front of camera";
-          }, 3500);
+            isScanningPaused = false;
+            showStatus("System Status: <span>[READY]</span>", "Position QR code in front of the camera", "info");
+          }, 3000);
         });
     }
 
-    function playChime(success) {
-      const ctx = new (window.AudioContext || window.webkitAudioContext)();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-
-      if (success) {
-        osc.frequency.setValueAtTime(587.33, ctx.currentTime);
-        osc.frequency.setValueAtTime(880, ctx.currentTime + 0.1);
-      } else {
-        osc.frequency.setValueAtTime(300, ctx.currentTime);
-        osc.frequency.setValueAtTime(200, ctx.currentTime + 0.15);
-      }
-
-      osc.start();
-      osc.stop(ctx.currentTime + 0.3);
-    }
+    const html5QrcodeScanner = new Html5QrcodeScanner(
+      "reader",
+      { fps: 15, qrbox: { width: 260, height: 200 } },
+      /* verbose= */ false
+    );
+    html5QrcodeScanner.render(onScanSuccess);
   </script>
 </body>
 </html>
