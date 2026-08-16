@@ -201,13 +201,19 @@
   <div class="doodle pencil-right">✏</div>
 
   <!-- Header Section -->
-  <header>
-    <div class="logo-container">
-      <!-- Replace src with your local image file or URL if needed -->
-      <img src="https://upload.wikimedia.org/wikipedia/commons/9/9d/Kumon_Logo.svg" alt="Kumon of Hicksville">
-    </div>
-    <h1>KUMON ATTENDANCE</h1>
-  </header>
+<header>
+  <!-- Kumon Logo -->
+  <img 
+    src="https://kumon.com/hicksville/images/logo.png" 
+    alt="Kumon of Hicksville Logo" 
+    style="max-width: 240px; height: auto; margin-bottom: 8px;"
+    onerror="this.style.display='none'; document.getElementById('alt-title').style.display='block';"
+  >
+  <h1 id="alt-title" style="display: none; font-size: 2rem; font-weight: 700; color: #38bdf8;">
+    KUMON OF HICKSVILLE
+  </h1>
+  <div id="clock">12:00:00 PM</div>
+</header>
 
   <!-- Camera Section -->
   <main>
@@ -232,7 +238,7 @@
   </footer>
 
   <script>
-    const APPS_SCRIPT_URL = "YOUR_WEBAPP_URL_HERE";
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwAQJNDVFMQ1dZOW_ikEepyPc9H0FWfjTpC5M_iv9QeQNevBY1dG8dDxynw1wy60LcV/exec";
     let isScanningPaused = false;
 
     function playBeep(freq = 880, type = 'sine', duration = 0.15) {
