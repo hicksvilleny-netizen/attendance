@@ -33,17 +33,16 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* Kiosk Header */
+    /* Kiosk Header & Logo */
     header {
       text-align: center;
       margin-bottom: 20px;
     }
-    header h1 {
-      font-size: 2.2rem;
-      font-weight: 700;
-      color: #38bdf8;
-      letter-spacing: -0.5px;
-      text-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+    .logo-img {
+      max-width: 260px;
+      height: auto;
+      margin-bottom: 8px;
+      filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.4));
     }
     #clock {
       font-size: 1.1rem;
@@ -136,7 +135,16 @@
 <body>
 
   <header>
-    <h1>KUMON OF HICKSVILLE</h1>
+    <!-- Kumon Logo Image (Fallback to Title Text if image fails to load) -->
+    <img 
+      src="KumonofHicksvilleLOGO.jpg" 
+      alt="Kumon Logo" 
+      class="logo-img"
+      onerror="this.style.display='none'; document.getElementById('alt-title').style.display='block';"
+    >
+    <h1 id="alt-title" style="display: none; font-size: 2rem; font-weight: 700; color: #38bdf8;">
+      KUMON OF HICKSVILLE
+    </h1>
     <div id="clock">12:00:00 PM</div>
   </header>
 
@@ -160,7 +168,7 @@
       document.getElementById("clock").innerText = new Date().toLocaleTimeString();
     }, 1000);
 
-    // Audio Feedback
+    // Audio Feedback (Beep Synthesizer)
     function playBeep(freq = 880, type = 'sine', duration = 0.15) {
       try {
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
