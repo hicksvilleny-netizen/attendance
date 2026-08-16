@@ -1,0 +1,156 @@
+﻿<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance Kiosk</title>
+  <!-- Load HTML5-QRCode Library -->
+  <script src="https://unpkg.com/html5-qrcode"></script>
+  <style>
+    body {
+      background-color: #121212;
+      color: #ffffff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .kiosk-card {
+      background: #1e1e1e;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+      text-align: center;
+      width: 90%;
+      max-width: 420px;
+    }
+    h2 { margin-top: 0; font-size: 24px; color: #ffffff; }
+    /* Camera Screen Container */
+    #reader {
+      width: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #000;
+      margin: 15px 0;
+      min-height: 250px;
+    }
+    .status-box {
+      background: #2a2a2a;
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 10px;
+    }
+    .status-sub { font-size: 12px; color: #aaa; letter-spacing: 1px; }
+    .status-main { font-size: 22px; font-weight: bold; margin: 5px 0; color: #4caf50; }
+    .status-desc { font-size: 14px; color: #ccc; }
+  </style>
+</head>
+<body>
+
+  <div class="kiosk-card">
+    <h2>Kumon Attendance</h2>
+
+    <!-- Live Webcam Stream Target -->
+    <div id="reader"></div>
+
+    <div class="status-box">
+      <div class="status-sub">SYSTEM STATUS</div>
+      <div id="status-title" class="status-main">READY</div>
+      <div id="status-desc" class="status-desc">Position QR code in front of camera</div>
+    </div>
+  </div>
+
+  <script>
+    const APPS_SCRIPT_URL = "YOUR_APPS_SCRIPT_URL_HERE"; // Paste your Web App URL here
+    let isProcessing = false;
+
+    // Detect camera devices and launch video feed
+    Html5Qrcode.getCameras().then(devices => {
+      if (devices && devices.length) {
+        let cameraId = devices[0].id;
+        for (let dev of devices) {
+          if (dev.label.toLowerCase().includes("front") || 
+              dev.label.toLowerCase().includes("user") || 
+              dev.label.toLowerCase().includes("integrated")) {
+            cameraId = dev.id;
+            break;
+          }
+        }
+
+        const html5QrCode = new Html5Qrcode("reader");
+        html5QrCode.start(
+          cameraId,
+          { fps: 10, qrbox: { width: 220, height: 220 } },
+          onScanSuccess
+        ).catch(err => {
+          document.getElementById("status-title").innerText = "CAMERA ERROR";
+          document.getElementById("status-desc").innerText = "Unable to start camera stream.";
+        });
+      } else {
+        document.getElementById("status-title").innerText = "NO CAMERA";
+        document.getElementById("status-desc").innerText = "No camera hardware detected.";
+      }
+    }).catch(err => {
+      document.getElementById("status-title").innerText = "PERMISSIONS BLOCKED";
+      document.getElementById("status-desc").innerText = "Allow camera access in site settings.";
+    });
+
+    function onScanSuccess(decodedText) {
+      if (isProcessing) return;
+      isProcessing = true;
+
+      const studentId = decodedText.split(/[^0-9]/)[0];
+      if (!studentId) {
+        isProcessing = false;
+        return;
+      }
+
+      document.getElementById("status-title").innerText = "PROCESSING...";
+      document.getElementById("status-desc").innerText = "Logging attendance record";
+
+      fetch(`${APPS_SCRIPT_URL}?id=${encodeURIComponent(studentId)}&mode=kiosk`)
+        .then(res => res.json())
+        .then(data => {
+          playChime(data.type === "success");
+          document.getElementById("status-title").innerText = data.title || "SUCCESS";
+          document.getElementById("status-desc").innerText = data.message;
+        })
+        .catch(err => {
+          playChime(false);
+          document.getElementById("status-title").innerText = "ERROR";
+          document.getElementById("status-desc").innerText = "Connection failed. Try again.";
+        })
+        .finally(() => {
+          setTimeout(() => {
+            isProcessing = false;
+            document.getElementById("status-title").innerText = "READY";
+            document.getElementById("status-desc").innerText = "Position QR code in front of camera";
+          }, 3500);
+        });
+    }
+
+    function playChime(success) {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      if (success) {
+        osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+        osc.frequency.setValueAtTime(880, ctx.currentTime + 0.1);
+      } else {
+        osc.frequency.setValueAtTime(300, ctx.currentTime);
+        osc.frequency.setValueAtTime(200, ctx.currentTime + 0.15);
+      }
+
+      osc.start();
+      osc.stop(ctx.currentTime + 0.3);
+    }
+  </script>
+</body>
+</html>
