@@ -11,9 +11,13 @@
   
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    /* Vibrant Animated Neon Gradient Background */
     body {
       font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      background: linear-gradient(-45deg, #0f172a, #0369a1, #1e1b4b, #0284c7);
+      background-size: 400% 400%;
+      animation: neonGlow 12s ease infinite;
       color: #f8fafc;
       min-height: 100vh;
       display: flex;
@@ -21,6 +25,12 @@
       align-items: center;
       justify-content: center;
       padding: 20px;
+    }
+
+    @keyframes neonGlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
     /* Kiosk Header & Logo */
@@ -32,24 +42,26 @@
       max-width: 240px;
       height: auto;
       margin-bottom: 8px;
+      filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.4));
     }
     #clock {
       font-size: 1.1rem;
-      color: #94a3b8;
+      color: #e2e8f0;
       margin-top: 4px;
       font-weight: 600;
+      text-shadow: 0 0 8px rgba(0,0,0,0.5);
     }
 
-    /* Scanner Card Container */
+    /* Playful Glassmorphism Kiosk Card */
     .kiosk-card {
-      background: rgba(30, 41, 59, 0.7);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(56, 189, 248, 0.3);
       border-radius: 24px;
       padding: 24px;
       width: 100%;
       max-width: 480px;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 0 35px rgba(56, 189, 248, 0.25), 0 20px 25px -5px rgba(0, 0, 0, 0.5);
       position: relative;
     }
 
@@ -60,7 +72,7 @@
       border-radius: 16px;
       overflow: hidden;
       background: #090d16;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(56, 189, 248, 0.4);
     }
     #reader {
       width: 100%;
@@ -71,20 +83,17 @@
       border-radius: 14px;
     }
 
-    /* --- TARGETED CORNER FIX --- */
-    /* Remove default white corner overlays and box outlines from HTML5-QRCode */
+    /* Remove default white outer corner brackets */
     #reader__scan_region {
       border: none !important;
       box-shadow: none !important;
     }
-
-    /* Hide specifically the outer white corner bracket elements */
     #reader__scan_region svg path[fill="#FFFFFF"],
     #reader__scan_region svg polygon[fill="#FFFFFF"] {
       display: none !important;
     }
 
-    /* Animated Sweeping Laser Overlay */
+    /* Animated Sweeping Cyan Laser Overlay */
     .laser-line {
       position: absolute;
       top: 0;
@@ -117,10 +126,10 @@
     }
 
     /* Alert Themes */
-    .status-success { background: #065f46; color: #34d399; border: 1px solid #10b981; }
-    .status-warning { background: #78350f; color: #fbbf24; border: 1px solid #f59e0b; }
-    .status-error   { background: #7f1d1d; color: #fca5a5; border: 1px solid #ef4444; }
-    .status-info    { background: #1e3a8a; color: #93c5fd; border: 1px solid #3b82f6; }
+    .status-success { background: #065f46; color: #34d399; border: 1px solid #10b981; box-shadow: 0 0 15px rgba(16, 185, 129, 0.3); }
+    .status-warning { background: #78350f; color: #fbbf24; border: 1px solid #f59e0b; box-shadow: 0 0 15px rgba(245, 158, 11, 0.3); }
+    .status-error   { background: #7f1d1d; color: #fca5a5; border: 1px solid #ef4444; box-shadow: 0 0 15px rgba(239, 68, 68, 0.3); }
+    .status-info    { background: #1e3a8a; color: #93c5fd; border: 1px solid #3b82f6; box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); }
   </style>
 </head>
 <body>
@@ -128,7 +137,7 @@
   <header>
     <!-- Kumon Logo Image (Fallback to Title Text if image fails) -->
     <img 
-      src="https://github.com/hicksvilleny-netizen/attendance/blob/main/KumonofHicksvilleLOGO.jpg?raw=true" 
+      src="KumonofHicksvilleLOGO.jpg" 
       alt="Kumon Logo" 
       class="logo-img"
       onerror="this.style.display='none'; document.getElementById('alt-title').style.display='block';"
@@ -160,7 +169,7 @@
       document.getElementById("clock").innerText = new Date().toLocaleTimeString();
     }, 1000);
 
-    // Audio Feedback (Beep)
+    // Audio Feedback (Beep Synthesizer)
     function playBeep(freq = 880, type = 'sine', duration = 0.15) {
       try {
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
