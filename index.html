@@ -12,7 +12,7 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     
-    /* Vibrant Animated Neon Gradient Background */
+    /* Playful Neon Animated Gradient Background */
     body {
       font-family: 'Inter', sans-serif;
       background: linear-gradient(-45deg, #0f172a, #0369a1, #1e1b4b, #0284c7);
@@ -33,26 +33,27 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* Kiosk Header & Logo */
+    /* Kiosk Header */
     header {
       text-align: center;
       margin-bottom: 20px;
     }
-    .logo-img {
-      max-width: 240px;
-      height: auto;
-      margin-bottom: 8px;
-      filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.4));
+    header h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #38bdf8;
+      letter-spacing: -0.5px;
+      text-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
     }
     #clock {
       font-size: 1.1rem;
       color: #e2e8f0;
-      margin-top: 4px;
+      margin-top: 6px;
       font-weight: 600;
       text-shadow: 0 0 8px rgba(0,0,0,0.5);
     }
 
-    /* Playful Glassmorphism Kiosk Card */
+    /* Glassmorphism Card Container */
     .kiosk-card {
       background: rgba(15, 23, 42, 0.75);
       backdrop-filter: blur(16px);
@@ -83,7 +84,7 @@
       border-radius: 14px;
     }
 
-    /* Remove default white outer corner brackets */
+    /* Remove outer white corner brackets */
     #reader__scan_region {
       border: none !important;
       box-shadow: none !important;
@@ -135,16 +136,7 @@
 <body>
 
   <header>
-    <!-- Kumon Logo Image (Fallback to Title Text if image fails) -->
-    <img 
-      src="KumonofHicksvilleLOGO.jpg" 
-      alt="Kumon Logo" 
-      class="logo-img"
-      onerror="this.style.display='none'; document.getElementById('alt-title').style.display='block';"
-    >
-    <h1 id="alt-title" style="display: none; font-size: 2rem; font-weight: 700; color: #38bdf8;">
-      KUMON OF HICKSVILLE
-    </h1>
+    <h1>KUMON OF HICKSVILLE</h1>
     <div id="clock">12:00:00 PM</div>
   </header>
 
@@ -159,7 +151,6 @@
   </main>
 
   <script>
-    // 1. UPDATE YOUR WEBAPP URL HERE
     const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwAQJNDVFMQ1dZOW_ikEepyPc9H0FWfjTpC5M_iv9QeQNevBY1dG8dDxynw1wy60LcV/exec";
 
     let isScanningPaused = false;
@@ -169,7 +160,7 @@
       document.getElementById("clock").innerText = new Date().toLocaleTimeString();
     }, 1000);
 
-    // Audio Feedback (Beep Synthesizer)
+    // Audio Feedback
     function playBeep(freq = 880, type = 'sine', duration = 0.15) {
       try {
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -200,20 +191,20 @@
       if (isScanningPaused) return;
 
       isScanningPaused = true;
-      playBeep(880, 'sine', 0.12); // Instant High Beep
+      playBeep(880, 'sine', 0.12);
       showStatus("Logging scan...", "info");
 
       fetch(`${APPS_SCRIPT_URL}?id=${encodeURIComponent(decodedText)}&mode=kiosk`)
         .then(res => res.json())
         .then(data => {
           if (data.status === "success") {
-            playBeep(1200, 'sine', 0.2); // Success Tone
+            playBeep(1200, 'sine', 0.2);
             showStatus(data.message, "success");
           } else if (data.status === "duplicate" || data.status === "warning") {
-            playBeep(440, 'triangle', 0.25); // Warning Tone
+            playBeep(440, 'triangle', 0.25);
             showStatus(data.message, "warning");
           } else {
-            playBeep(220, 'sawtooth', 0.3); // Error Tone
+            playBeep(220, 'sawtooth', 0.3);
             showStatus(data.message || "Error processing scan.", "error");
           }
         })
@@ -223,7 +214,6 @@
           showStatus("Connection failed. Try again.", "error");
         })
         .finally(() => {
-          // Pause camera for 3 seconds before accepting next scan
           setTimeout(() => {
             isScanningPaused = false;
             showStatus("Ready to scan...", "info");
