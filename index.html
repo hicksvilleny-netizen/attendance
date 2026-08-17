@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Kumon Attendance Kiosk</title>
   <!-- Modern Kids-Friendly Font -->
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Inter:wght@600;700&display=swap" rel="stylesheet">
@@ -12,18 +12,21 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
+    html, body {
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+    }
+
     body {
       font-family: 'Fredoka', 'Inter', sans-serif;
       background: #060c18;
       color: #ffffff;
-      height: 100vh;
-      width: 100vw;
-      overflow: hidden;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
-      padding: 10px 16px;
+      padding: 12px 16px;
       position: relative;
     }
 
@@ -38,22 +41,22 @@
     }
 
     /* Top Elements */
-    .doodle.atom-top     { top: 2%; left: 25%; color: #00f2fe; font-size: 2.2rem; }
-    .doodle.planet-top   { top: 2%; right: 25%; color: #ffeb3b; font-size: 2.2rem; }
+    .doodle.atom-top     { top: 2%; left: 22%; color: #00f2fe; font-size: 2rem; }
+    .doodle.planet-top   { top: 2%; right: 22%; color: #ffeb3b; font-size: 2rem; }
 
     /* Left Side Stickers */
-    .doodle.rocket-left  { top: 25%; left: 4%; color: #ff007f; font-size: 2.4rem; transform: rotate(-20deg); }
-    .doodle.star-left    { top: 42%; left: 7%; color: #ffeb3b; }
-    .doodle.num-5-left   { top: 56%; left: 4%; color: #38ef7d; font-size: 2.2rem; }
-    .doodle.pencil-left  { top: 70%; left: 8%; color: #38ef7d; transform: rotate(15deg); }
-    .doodle.monster-bot-l{ bottom: 4%; left: 4%; color: #00f2fe; font-size: 2.5rem; }
+    .doodle.rocket-left  { top: 22%; left: 3%; color: #ff007f; font-size: 2.2rem; transform: rotate(-20deg); }
+    .doodle.star-left    { top: 40%; left: 6%; color: #ffeb3b; }
+    .doodle.num-5-left   { top: 58%; left: 3%; color: #38ef7d; font-size: 2rem; }
+    .doodle.pencil-left  { top: 72%; left: 7%; color: #38ef7d; transform: rotate(15deg); }
+    .doodle.monster-bot-l{ bottom: 3%; left: 3%; color: #00f2fe; font-size: 2.3rem; }
 
     /* Right Side Stickers */
-    .doodle.monster-top-r{ top: 22%; right: 4%; color: #38ef7d; font-size: 2.5rem; }
-    .doodle.num-5-right  { top: 38%; right: 7%; color: #38ef7d; font-size: 2.2rem; }
-    .doodle.num-3-right  { top: 54%; right: 5%; color: #ff007f; font-size: 2.2rem; }
-    .doodle.pencil-right { top: 68%; right: 8%; color: #ffeb3b; transform: rotate(-25deg); }
-    .doodle.rocket-bot-r { bottom: 4%; right: 4%; color: #ff007f; font-size: 2.5rem; transform: rotate(45deg); }
+    .doodle.monster-top-r{ top: 20%; right: 3%; color: #38ef7d; font-size: 2.3rem; }
+    .doodle.num-5-right  { top: 38%; right: 6%; color: #38ef7d; font-size: 2rem; }
+    .doodle.num-3-right  { top: 56%; right: 4%; color: #ff007f; font-size: 2rem; }
+    .doodle.pencil-right { top: 70%; right: 7%; color: #ffeb3b; transform: rotate(-25deg); }
+    .doodle.rocket-bot-r { bottom: 3%; right: 3%; color: #ff007f; font-size: 2.3rem; transform: rotate(45deg); }
 
     /* Header Layout */
     header {
@@ -75,38 +78,40 @@
     }
 
     .logo-container img {
-      height: 55px; /* Sized to fit comfortably */
+      height: 50px;
       display: block;
     }
 
     header h1 {
-      font-size: 1.4rem;
+      font-size: 1.25rem;
       font-weight: 700;
       color: #38ef7d;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 0.8px;
       text-shadow: 0 0 12px #38ef7d, 0 0 24px #38ef7d;
-      padding: 0 10px;
+      padding: 0 8px;
     }
 
     /* Center Section (Camera Viewport) */
     main {
       position: relative;
       width: 100%;
-      max-width: 360px;
-      height: 210px; /* Constrained height to keep footer on-screen */
+      max-width: 380px;
+      flex: 1;
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 2;
-      flex-shrink: 0;
+      min-height: 0; /* Prevents flex children from overflowing */
+      margin: 6px 0;
     }
 
     .scanner-wrapper {
       position: relative;
       width: 100%;
-      height: 100%;
-      border-radius: 20px;
+      max-height: 100%;
+      aspect-ratio: 4 / 3;
+      border-radius: 18px;
       overflow: hidden;
       background: #020611;
       box-shadow: 0 0 20px rgba(56, 239, 125, 0.3);
@@ -122,7 +127,7 @@
       object-fit: cover !important;
       width: 100% !important;
       height: 100% !important;
-      border-radius: 18px;
+      border-radius: 16px;
     }
 
     /* Green Neon Corner Framing Overlay */
@@ -135,16 +140,16 @@
 
     .corner {
       position: absolute;
-      width: 32px;
-      height: 32px;
+      width: 28px;
+      height: 28px;
       border-color: #38ef7d;
       border-style: solid;
       filter: drop-shadow(0 0 8px #38ef7d);
     }
-    .top-left     { top: 8px; left: 8px; border-width: 5px 0 0 5px; border-top-left-radius: 12px; }
-    .top-right    { top: 8px; right: 8px; border-width: 5px 5px 0 0; border-top-right-radius: 12px; }
-    .bottom-left  { bottom: 8px; left: 8px; border-width: 0 0 5px 5px; border-bottom-left-radius: 12px; }
-    .bottom-right { bottom: 8px; right: 8px; border-width: 0 5px 5px 0; border-bottom-right-radius: 12px; }
+    .top-left     { top: 6px; left: 6px; border-width: 4px 0 0 4px; border-top-left-radius: 10px; }
+    .top-right    { top: 6px; right: 6px; border-width: 4px 4px 0 0; border-top-right-radius: 10px; }
+    .bottom-left  { bottom: 6px; left: 6px; border-width: 0 0 4px 4px; border-bottom-left-radius: 10px; }
+    .bottom-right { bottom: 6px; right: 6px; border-width: 0 4px 4px 0; border-bottom-right-radius: 10px; }
 
     /* Sweeping Laser Scan Line */
     .laser-line {
@@ -169,24 +174,23 @@
     /* Footer / System Status Banner */
     footer {
       width: 100%;
-      max-width: 560px;
+      max-width: 520px;
       z-index: 2;
       flex-shrink: 0;
-      margin-bottom: 4px;
     }
 
     #status-card {
-      background: rgba(8, 28, 44, 0.85);
+      background: rgba(8, 28, 44, 0.9);
       border: 2px solid #38ef7d;
-      border-radius: 14px;
-      padding: 8px 16px;
+      border-radius: 12px;
+      padding: 8px 14px;
       text-align: center;
       box-shadow: 0 0 15px rgba(56, 239, 125, 0.4);
       transition: all 0.3s ease;
     }
 
     .status-title {
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       font-weight: 700;
       color: #00f2fe;
     }
@@ -197,7 +201,7 @@
     }
 
     .status-sub {
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       color: #cbd5e1;
       margin-top: 1px;
     }
@@ -214,22 +218,21 @@
       }
 
       header h1 {
-        font-size: 1.1rem;
+        font-size: 1.05rem;
       }
 
       .logo-container img {
-        height: 45px;
+        height: 40px;
       }
 
       main {
-        width: 88vw;
-        max-width: 300px;
-        height: 190px;
+        width: 92vw;
+        max-width: 320px;
       }
 
       .doodle {
-        font-size: 1.5rem !important;
-        opacity: 0.4;
+        font-size: 1.4rem !important;
+        opacity: 0.35;
       }
 
       .doodle.star-left, .doodle.pencil-left,
@@ -242,11 +245,11 @@
       }
 
       .status-title {
-        font-size: 1rem;
+        font-size: 0.95rem;
       }
 
       .status-sub {
-        font-size: 0.78rem;
+        font-size: 0.75rem;
       }
     }
   </style>
@@ -366,9 +369,8 @@
         });
     }
 
-    // Automatically detects device orientation:
-    // Uses "user" (front camera) for Landscape/Tablet (Duet 5)
-    // Uses "environment" (rear camera) for Mobile/Portrait (Samsung S22/A16)
+    // Automatically selects front camera ("user") for landscape tablets (Duet 5)
+    // and back camera ("environment") for portrait mobile phones (S22 / A16)
     const isPortrait = window.matchMedia("(orientation: portrait)").matches || window.innerWidth < 600;
     const selectedFacingMode = isPortrait ? "environment" : "user";
 
@@ -376,7 +378,7 @@
       "reader",
       { 
         fps: 15, 
-        qrbox: { width: 180, height: 140 },
+        aspectRatio: 1.333333,
         videoConstraints: {
           facingMode: selectedFacingMode
         }
