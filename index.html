@@ -23,7 +23,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
-      padding: 20px 40px;
+      padding: 20px 20px;
       position: relative;
     }
 
@@ -38,22 +38,22 @@
     }
 
     /* Top Elements */
-    .doodle.atom-top     { top: 4%; left: 35%; color: #00f2fe; font-size: 2.5rem; }
-    .doodle.planet-top   { top: 5%; right: 35%; color: #ffeb3b; font-size: 2.5rem; }
+    .doodle.atom-top     { top: 4%; left: 30%; color: #00f2fe; font-size: 2.5rem; }
+    .doodle.planet-top   { top: 5%; right: 30%; color: #ffeb3b; font-size: 2.5rem; }
 
     /* Left Side Stickers */
-    .doodle.rocket-left  { top: 25%; left: 8%; color: #ff007f; font-size: 2.6rem; transform: rotate(-20deg); }
-    .doodle.star-left    { top: 42%; left: 12%; color: #ffeb3b; }
-    .doodle.num-5-left   { top: 56%; left: 7%; color: #38ef7d; font-size: 2.4rem; }
-    .doodle.pencil-left  { top: 70%; left: 14%; color: #38ef7d; transform: rotate(15deg); }
-    .doodle.monster-bot-l{ bottom: 8%; left: 8%; color: #00f2fe; font-size: 2.8rem; }
+    .doodle.rocket-left  { top: 25%; left: 6%; color: #ff007f; font-size: 2.6rem; transform: rotate(-20deg); }
+    .doodle.star-left    { top: 42%; left: 10%; color: #ffeb3b; }
+    .doodle.num-5-left   { top: 56%; left: 5%; color: #38ef7d; font-size: 2.4rem; }
+    .doodle.pencil-left  { top: 70%; left: 12%; color: #38ef7d; transform: rotate(15deg); }
+    .doodle.monster-bot-l{ bottom: 6%; left: 6%; color: #00f2fe; font-size: 2.8rem; }
 
     /* Right Side Stickers */
-    .doodle.monster-top-r{ top: 22%; right: 8%; color: #38ef7d; font-size: 2.8rem; }
-    .doodle.num-5-right  { top: 38%; right: 13%; color: #38ef7d; font-size: 2.4rem; }
-    .doodle.num-3-right  { top: 54%; right: 10%; color: #ff007f; font-size: 2.4rem; }
-    .doodle.pencil-right { top: 68%; right: 15%; color: #ffeb3b; transform: rotate(-25deg); }
-    .doodle.rocket-bot-r { bottom: 8%; right: 8%; color: #ff007f; font-size: 2.6rem; transform: rotate(45deg); }
+    .doodle.monster-top-r{ top: 22%; right: 6%; color: #38ef7d; font-size: 2.8rem; }
+    .doodle.num-5-right  { top: 38%; right: 10%; color: #38ef7d; font-size: 2.4rem; }
+    .doodle.num-3-right  { top: 54%; right: 8%; color: #ff007f; font-size: 2.4rem; }
+    .doodle.pencil-right { top: 68%; right: 12%; color: #ffeb3b; transform: rotate(-25deg); }
+    .doodle.rocket-bot-r { bottom: 6%; right: 6%; color: #ff007f; font-size: 2.6rem; transform: rotate(45deg); }
 
     /* Header Layout */
     header {
@@ -73,12 +73,12 @@
     }
 
     .logo-container img {
-      height: 48px;
+      height: 80px; /* Slightly increased for better visibility */
       display: block;
     }
 
     header h1 {
-      font-size: 2.2rem;
+      font-size: 2rem;
       font-weight: 700;
       color: #38ef7d;
       text-transform: uppercase;
@@ -199,6 +199,64 @@
     .status-success { border-color: #38ef7d !important; box-shadow: 0 0 20px rgba(56, 239, 125, 0.6); }
     .status-warning { border-color: #ffeb3b !important; box-shadow: 0 0 20px rgba(255, 235, 59, 0.6); }
     .status-error   { border-color: #ff4b4b !important; box-shadow: 0 0 20px rgba(255, 75, 75, 0.6); }
+
+    /* ========================================================= */
+    /* PORTRAIT MODE & MOBILE STYLES (Samsung S22 / A16 / Mobile) */
+    /* ========================================================= */
+    @media (max-width: 600px) or (orientation: portrait) {
+      body {
+        padding: 16px 12px;
+      }
+
+      header h1 {
+        font-size: 1.5rem;
+      }
+
+      .logo-container img {
+        height: 50px;
+      }
+
+      main {
+        width: 90vw;
+        max-width: 340px;
+        height: 280px;
+      }
+
+      /* Adjust sticker size & positioning for mobile screens */
+      .doodle {
+        font-size: 1.8rem !important;
+        opacity: 0.6;
+      }
+
+      .doodle.atom-top   { top: 2%; left: 15%; }
+      .doodle.planet-top { top: 2%; right: 15%; }
+      
+      .doodle.rocket-left   { top: 18%; left: 2%; }
+      .doodle.monster-top-r { top: 18%; right: 2%; }
+
+      .doodle.num-5-left    { top: 48%; left: 2%; }
+      .doodle.num-3-right   { top: 48%; right: 2%; }
+
+      .doodle.monster-bot-l { bottom: 12%; left: 3%; }
+      .doodle.rocket-bot-r  { bottom: 12%; right: 3%; }
+
+      .doodle.star-left, .doodle.pencil-left,
+      .doodle.num-5-right, .doodle.pencil-right {
+        display: none; /* Hide dense inner stickers on small screens */
+      }
+
+      #status-card {
+        padding: 8px 14px;
+      }
+
+      .status-title {
+        font-size: 1.1rem;
+      }
+
+      .status-sub {
+        font-size: 0.85rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -222,7 +280,6 @@
   <!-- Header Section -->
   <header>
     <div class="logo-container">
-      <!-- REPLACE URL BELOW WITH YOUR ACTUAL LOGO FILE/URL -->
       <img src="KumonofHicksvilleLOGO.jpg" alt="Kumon of Hicksville">
     </div>
     <h1>KUMON ATTENDANCE</h1>
@@ -251,7 +308,6 @@
   </footer>
 
   <script>
-    // REPLACE WITH YOUR ACTUAL GOOGLE APPS SCRIPT WEB APP URL
     const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwAQJNDVFMQ1dZOW_ikEepyPc9H0FWfjTpC5M_iv9QeQNevBY1dG8dDxynw1wy60LcV/exec";
     let isScanningPaused = false;
 
@@ -318,7 +374,7 @@
 
     const html5QrcodeScanner = new Html5QrcodeScanner(
       "reader",
-      { fps: 15, qrbox: { width: 260, height: 200 } },
+      { fps: 15, qrbox: { width: 220, height: 180 } },
       /* verbose= */ false
     );
     html5QrcodeScanner.render(onScanSuccess);
