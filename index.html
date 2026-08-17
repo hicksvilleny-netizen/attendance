@@ -16,15 +16,14 @@
       font-family: 'Fredoka', 'Inter', sans-serif;
       background: #060c18;
       color: #ffffff;
-      min-height: 100vh;
+      height: 100vh;
       width: 100vw;
-      overflow-x: hidden;
-      overflow-y: auto;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
-      padding: 16px 20px;
+      padding: 10px 16px;
       position: relative;
     }
 
@@ -39,69 +38,68 @@
     }
 
     /* Top Elements */
-    .doodle.atom-top     { top: 4%; left: 25%; color: #00f2fe; font-size: 2.2rem; }
-    .doodle.planet-top   { top: 5%; right: 25%; color: #ffeb3b; font-size: 2.2rem; }
+    .doodle.atom-top     { top: 2%; left: 25%; color: #00f2fe; font-size: 2.2rem; }
+    .doodle.planet-top   { top: 2%; right: 25%; color: #ffeb3b; font-size: 2.2rem; }
 
     /* Left Side Stickers */
-    .doodle.rocket-left  { top: 25%; left: 5%; color: #ff007f; font-size: 2.4rem; transform: rotate(-20deg); }
-    .doodle.star-left    { top: 42%; left: 8%; color: #ffeb3b; }
+    .doodle.rocket-left  { top: 25%; left: 4%; color: #ff007f; font-size: 2.4rem; transform: rotate(-20deg); }
+    .doodle.star-left    { top: 42%; left: 7%; color: #ffeb3b; }
     .doodle.num-5-left   { top: 56%; left: 4%; color: #38ef7d; font-size: 2.2rem; }
-    .doodle.pencil-left  { top: 70%; left: 10%; color: #38ef7d; transform: rotate(15deg); }
-    .doodle.monster-bot-l{ bottom: 6%; left: 5%; color: #00f2fe; font-size: 2.5rem; }
+    .doodle.pencil-left  { top: 70%; left: 8%; color: #38ef7d; transform: rotate(15deg); }
+    .doodle.monster-bot-l{ bottom: 4%; left: 4%; color: #00f2fe; font-size: 2.5rem; }
 
     /* Right Side Stickers */
-    .doodle.monster-top-r{ top: 22%; right: 5%; color: #38ef7d; font-size: 2.5rem; }
-    .doodle.num-5-right  { top: 38%; right: 8%; color: #38ef7d; font-size: 2.2rem; }
-    .doodle.num-3-right  { top: 54%; right: 6%; color: #ff007f; font-size: 2.2rem; }
-    .doodle.pencil-right { top: 68%; right: 10%; color: #ffeb3b; transform: rotate(-25deg); }
-    .doodle.rocket-bot-r { bottom: 6%; right: 5%; color: #ff007f; font-size: 2.5rem; transform: rotate(45deg); }
+    .doodle.monster-top-r{ top: 22%; right: 4%; color: #38ef7d; font-size: 2.5rem; }
+    .doodle.num-5-right  { top: 38%; right: 7%; color: #38ef7d; font-size: 2.2rem; }
+    .doodle.num-3-right  { top: 54%; right: 5%; color: #ff007f; font-size: 2.2rem; }
+    .doodle.pencil-right { top: 68%; right: 8%; color: #ffeb3b; transform: rotate(-25deg); }
+    .doodle.rocket-bot-r { bottom: 4%; right: 4%; color: #ff007f; font-size: 2.5rem; transform: rotate(45deg); }
 
     /* Header Layout */
     header {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
       z-index: 2;
       text-align: center;
-      margin-bottom: 8px;
+      flex-shrink: 0;
     }
 
     .logo-container {
       background: #ffffff;
-      padding: 6px 18px;
+      padding: 4px 14px;
       border-radius: 8px;
       box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
       display: inline-block;
     }
 
     .logo-container img {
-      height: 70px; /* Sized up as requested */
+      height: 55px; /* Sized to fit comfortably */
       display: block;
     }
 
     header h1 {
-      font-size: 1.6rem; /* Adjusted down slightly so the long text fits without pushing content */
+      font-size: 1.4rem;
       font-weight: 700;
       color: #38ef7d;
       text-transform: uppercase;
       letter-spacing: 1px;
       text-shadow: 0 0 12px #38ef7d, 0 0 24px #38ef7d;
       padding: 0 10px;
-      max-width: 90vw;
     }
 
     /* Center Section (Camera Viewport) */
     main {
       position: relative;
       width: 100%;
-      max-width: 380px;
-      height: 240px; /* Controlled height */
+      max-width: 360px;
+      height: 210px; /* Constrained height to keep footer on-screen */
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 2;
-      margin: 8px 0;
+      flex-shrink: 0;
     }
 
     .scanner-wrapper {
@@ -171,23 +169,24 @@
     /* Footer / System Status Banner */
     footer {
       width: 100%;
-      max-width: 600px;
+      max-width: 560px;
       z-index: 2;
-      margin-top: 6px;
+      flex-shrink: 0;
+      margin-bottom: 4px;
     }
 
     #status-card {
       background: rgba(8, 28, 44, 0.85);
       border: 2px solid #38ef7d;
-      border-radius: 16px;
-      padding: 10px 18px;
+      border-radius: 14px;
+      padding: 8px 16px;
       text-align: center;
       box-shadow: 0 0 15px rgba(56, 239, 125, 0.4);
       transition: all 0.3s ease;
     }
 
     .status-title {
-      font-size: 1.2rem;
+      font-size: 1.15rem;
       font-weight: 700;
       color: #00f2fe;
     }
@@ -198,9 +197,9 @@
     }
 
     .status-sub {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: #cbd5e1;
-      margin-top: 2px;
+      margin-top: 1px;
     }
 
     /* Dynamic Themes for Status Updates */
@@ -208,44 +207,30 @@
     .status-warning { border-color: #ffeb3b !important; box-shadow: 0 0 20px rgba(255, 235, 59, 0.6); }
     .status-error   { border-color: #ff4b4b !important; box-shadow: 0 0 20px rgba(255, 75, 75, 0.6); }
 
-    /* ========================================================= */
-    /* PORTRAIT MODE & MOBILE STYLES (Samsung S22 / A16 / Mobile) */
-    /* ========================================================= */
+    /* Mobile Portrait Responsive Tweaks */
     @media (max-width: 600px) or (orientation: portrait) {
       body {
-        padding: 12px 10px;
+        padding: 8px 8px;
       }
 
       header h1 {
-        font-size: 1.25rem;
+        font-size: 1.1rem;
       }
 
       .logo-container img {
-        height: 55px;
+        height: 45px;
       }
 
       main {
-        width: 90vw;
-        max-width: 320px;
-        height: 220px;
+        width: 88vw;
+        max-width: 300px;
+        height: 190px;
       }
 
       .doodle {
-        font-size: 1.6rem !important;
-        opacity: 0.5;
+        font-size: 1.5rem !important;
+        opacity: 0.4;
       }
-
-      .doodle.atom-top   { top: 1%; left: 10%; }
-      .doodle.planet-top { top: 1%; right: 10%; }
-      
-      .doodle.rocket-left   { top: 20%; left: 2%; }
-      .doodle.monster-top-r { top: 20%; right: 2%; }
-
-      .doodle.num-5-left    { top: 50%; left: 2%; }
-      .doodle.num-3-right   { top: 50%; right: 2%; }
-
-      .doodle.monster-bot-l { bottom: 8%; left: 2%; }
-      .doodle.rocket-bot-r  { bottom: 8%; right: 2%; }
 
       .doodle.star-left, .doodle.pencil-left,
       .doodle.num-5-right, .doodle.pencil-right {
@@ -253,7 +238,7 @@
       }
 
       #status-card {
-        padding: 8px 12px;
+        padding: 6px 10px;
       }
 
       .status-title {
@@ -261,7 +246,7 @@
       }
 
       .status-sub {
-        font-size: 0.8rem;
+        font-size: 0.78rem;
       }
     }
   </style>
@@ -288,7 +273,7 @@
   <header>
     <div class="logo-container">
       <!-- REPLACE WITH YOUR LOGO FILE/PATH -->
-      <img src="KumonofHicksvilleLOGO.jpg" alt="Kumon of Hicksville">
+      <img src="KumonofHicksvilleLOGO,jpg" alt="Kumon of Hicksville">
     </div>
     <h1>KUMON OF HICKSVILLE ATTENDANCE KIOSK</h1>
   </header>
@@ -381,14 +366,19 @@
         });
     }
 
-    // Configured with videoConstraints to default to the REAR camera on mobile phones
+    // Automatically detects device orientation:
+    // Uses "user" (front camera) for Landscape/Tablet (Duet 5)
+    // Uses "environment" (rear camera) for Mobile/Portrait (Samsung S22/A16)
+    const isPortrait = window.matchMedia("(orientation: portrait)").matches || window.innerWidth < 600;
+    const selectedFacingMode = isPortrait ? "environment" : "user";
+
     const html5QrcodeScanner = new Html5QrcodeScanner(
       "reader",
       { 
         fps: 15, 
-        qrbox: { width: 220, height: 180 },
+        qrbox: { width: 180, height: 140 },
         videoConstraints: {
-          facingMode: "environment" // Forces the rear/back camera
+          facingMode: selectedFacingMode
         }
       },
       /* verbose= */ false
