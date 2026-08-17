@@ -4,172 +4,257 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kumon Attendance Kiosk</title>
-  <!-- Modern Font (Inter) -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- Modern Kids-Friendly Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Inter:wght@600;700&display=swap" rel="stylesheet">
   <!-- HTML5-QRCode Scanner Library -->
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
-  
+
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    
-    /* Playful Neon Animated Gradient Background */
+
     body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(-45deg, #0f172a, #0369a1, #1e1b4b, #0284c7);
-      background-size: 400% 400%;
-      animation: neonGlow 12s ease infinite;
-      color: #f8fafc;
-      min-height: 100vh;
+      font-family: 'Fredoka', 'Inter', sans-serif;
+      background: #060c18;
+      color: #ffffff;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    @keyframes neonGlow {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    /* Kiosk Header & Logo */
-    header {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .logo-img {
-      max-width: 260px;
-      height: auto;
-      margin-bottom: 8px;
-      filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.6));
-    }
-    #clock {
-      font-size: 1.1rem;
-      color: #e2e8f0;
-      margin-top: 6px;
-      font-weight: 600;
-      text-shadow: 0 0 8px rgba(0,0,0,0.5);
-    }
-
-    /* Glassmorphism Card Container with Neon Glow */
-    .kiosk-card {
-      background: rgba(15, 23, 42, 0.75);
-      backdrop-filter: blur(16px);
-      border: 1px solid rgba(56, 189, 248, 0.4);
-      border-radius: 24px;
-      padding: 24px;
-      width: 100%;
-      max-width: 480px;
-      box-shadow: 0 0 35px rgba(56, 189, 248, 0.3), 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+      justify-content: space-between;
+      padding: 20px 40px;
       position: relative;
     }
 
-    /* Camera Viewport Wrapper */
+    /* Kids Neon Background Stickers & Doodles */
+    .doodle {
+      position: absolute;
+      font-size: 2.2rem;
+      opacity: 0.85;
+      user-select: none;
+      pointer-events: none;
+      text-shadow: 0 0 12px currentColor;
+    }
+
+    /* Top Elements */
+    .doodle.atom-top     { top: 4%; left: 35%; color: #00f2fe; font-size: 2.5rem; }
+    .doodle.planet-top   { top: 5%; right: 35%; color: #ffeb3b; font-size: 2.5rem; }
+
+    /* Left Side Stickers */
+    .doodle.rocket-left  { top: 25%; left: 8%; color: #ff007f; font-size: 2.6rem; transform: rotate(-20deg); }
+    .doodle.star-left    { top: 42%; left: 12%; color: #ffeb3b; }
+    .doodle.num-5-left   { top: 56%; left: 7%; color: #38ef7d; font-size: 2.4rem; }
+    .doodle.pencil-left  { top: 70%; left: 14%; color: #38ef7d; transform: rotate(15deg); }
+    .doodle.monster-bot-l{ bottom: 8%; left: 8%; color: #00f2fe; font-size: 2.8rem; }
+
+    /* Right Side Stickers */
+    .doodle.monster-top-r{ top: 22%; right: 8%; color: #38ef7d; font-size: 2.8rem; }
+    .doodle.num-5-right  { top: 38%; right: 13%; color: #38ef7d; font-size: 2.4rem; }
+    .doodle.num-3-right  { top: 54%; right: 10%; color: #ff007f; font-size: 2.4rem; }
+    .doodle.pencil-right { top: 68%; right: 15%; color: #ffeb3b; transform: rotate(-25deg); }
+    .doodle.rocket-bot-r { bottom: 8%; right: 8%; color: #ff007f; font-size: 2.6rem; transform: rotate(45deg); }
+
+    /* Header Layout */
+    header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      z-index: 2;
+    }
+
+    .logo-container {
+      background: #ffffff;
+      padding: 6px 18px;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+      display: inline-block;
+    }
+
+    .logo-container img {
+      height: 48px;
+      display: block;
+    }
+
+    header h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #38ef7d;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      text-shadow: 0 0 12px #38ef7d, 0 0 24px #38ef7d;
+    }
+
+    /* Center Section (Camera Viewport) */
+    main {
+      position: relative;
+      width: 380px;
+      height: 260px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+    }
+
     .scanner-wrapper {
       position: relative;
       width: 100%;
-      min-height: 300px;
-      border-radius: 16px;
+      height: 100%;
+      border-radius: 20px;
       overflow: hidden;
-      background: #090d16;
-      border: 2px solid rgba(56, 189, 248, 0.4);
+      background: #020611;
+      box-shadow: 0 0 20px rgba(56, 239, 125, 0.3);
     }
+
     #reader {
       width: 100%;
+      height: 100%;
       border: none !important;
     }
+
     #reader video {
       object-fit: cover !important;
-      border-radius: 14px;
+      width: 100% !important;
+      height: 100% !important;
+      border-radius: 18px;
     }
 
-    /* Remove outer white corner brackets */
-    #reader__scan_region {
-      border: none !important;
-      box-shadow: none !important;
-    }
-    #reader__scan_region svg path[fill="#FFFFFF"],
-    #reader__scan_region svg polygon[fill="#FFFFFF"] {
-      display: none !important;
+    /* Green Neon Corner Framing Overlay */
+    .scanner-frame {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 10;
     }
 
-    /* Animated Sweeping Cyan Laser Overlay */
+    .corner {
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      border-color: #38ef7d;
+      border-style: solid;
+      filter: drop-shadow(0 0 8px #38ef7d);
+    }
+    .top-left     { top: 8px; left: 8px; border-width: 5px 0 0 5px; border-top-left-radius: 12px; }
+    .top-right    { top: 8px; right: 8px; border-width: 5px 5px 0 0; border-top-right-radius: 12px; }
+    .bottom-left  { bottom: 8px; left: 8px; border-width: 0 0 5px 5px; border-bottom-left-radius: 12px; }
+    .bottom-right { bottom: 8px; right: 8px; border-width: 0 5px 5px 0; border-bottom-right-radius: 12px; }
+
+    /* Sweeping Laser Scan Line */
     .laser-line {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 3px;
-      background: linear-gradient(90deg, transparent, #38bdf8, transparent);
-      box-shadow: 0 0 15px #38bdf8;
-      animation: scanSweep 2.5s infinite ease-in-out;
-      z-index: 10;
+      background: linear-gradient(90deg, transparent, #38ef7d, transparent);
+      box-shadow: 0 0 15px #38ef7d, 0 0 25px #38ef7d;
+      animation: scanSweep 2.2s infinite ease-in-out;
+      z-index: 11;
       pointer-events: none;
     }
 
     @keyframes scanSweep {
-      0% { top: 5%; opacity: 0.2; }
-      50% { top: 90%; opacity: 1; }
-      100% { top: 5%; opacity: 0.2; }
+      0% { top: 8%; opacity: 0.3; }
+      50% { top: 88%; opacity: 1; }
+      100% { top: 8%; opacity: 0.3; }
     }
 
-    /* Status Alert Popup */
+    /* Footer / System Status Banner */
+    footer {
+      width: 100%;
+      max-width: 640px;
+      z-index: 2;
+    }
+
     #status-card {
-      margin-top: 20px;
-      padding: 16px 20px;
-      border-radius: 14px;
+      background: rgba(8, 28, 44, 0.85);
+      border: 2px solid #38ef7d;
+      border-radius: 16px;
+      padding: 10px 24px;
       text-align: center;
-      font-weight: 600;
-      font-size: 1.1rem;
+      box-shadow: 0 0 15px rgba(56, 239, 125, 0.4);
       transition: all 0.3s ease;
-      display: none;
     }
 
-    /* Alert Themes */
-    .status-success { background: #065f46; color: #34d399; border: 1px solid #10b981; box-shadow: 0 0 15px rgba(16, 185, 129, 0.3); }
-    .status-warning { background: #78350f; color: #fbbf24; border: 1px solid #f59e0b; box-shadow: 0 0 15px rgba(245, 158, 11, 0.3); }
-    .status-error   { background: #7f1d1d; color: #fca5a5; border: 1px solid #ef4444; box-shadow: 0 0 15px rgba(239, 68, 68, 0.3); }
-    .status-info    { background: #1e3a8a; color: #93c5fd; border: 1px solid #3b82f6; box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); }
+    .status-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #00f2fe;
+    }
+
+    .status-title span {
+      color: #38ef7d;
+      text-shadow: 0 0 8px #38ef7d;
+    }
+
+    .status-sub {
+      font-size: 0.95rem;
+      color: #cbd5e1;
+      margin-top: 2px;
+    }
+
+    /* Dynamic Themes for Status Updates */
+    .status-success { border-color: #38ef7d !important; box-shadow: 0 0 20px rgba(56, 239, 125, 0.6); }
+    .status-warning { border-color: #ffeb3b !important; box-shadow: 0 0 20px rgba(255, 235, 59, 0.6); }
+    .status-error   { border-color: #ff4b4b !important; box-shadow: 0 0 20px rgba(255, 75, 75, 0.6); }
   </style>
 </head>
 <body>
 
+  <!-- Neon Kids Stickers Background Overlay -->
+  <div class="doodle atom-top">⚛</div>
+  <div class="doodle planet-top">🪐</div>
+
+  <div class="doodle rocket-left">🚀</div>
+  <div class="doodle star-left">★</div>
+  <div class="doodle num-5-left">5</div>
+  <div class="doodle pencil-left">✏</div>
+  <div class="doodle monster-bot-l">👾</div>
+
+  <div class="doodle monster-top-r">👾</div>
+  <div class="doodle num-5-right">5</div>
+  <div class="doodle num-3-right">3</div>
+  <div class="doodle pencil-right">✏</div>
+  <div class="doodle rocket-bot-r">🚀</div>
+
+  <!-- Header Section -->
   <header>
-    <!-- Kumon Logo Image (Fallback to Title Text if image fails to load) -->
-    <img 
-      src="KumonofHicksvilleLOGO.jpg" 
-      alt="Kumon Logo" 
-      class="logo-img"
-      onerror="this.style.display='none'; document.getElementById('alt-title').style.display='block';"
-    >
-    <h1 id="alt-title" style="display: none; font-size: 2rem; font-weight: 700; color: #38bdf8;">
-      KUMON OF HICKSVILLE
-    </h1>
-    <div id="clock">12:00:00 PM</div>
+    <div class="logo-container">
+      <!-- REPLACE URL BELOW WITH YOUR ACTUAL LOGO FILE/URL -->
+      <img src="KumonofHicksvilleLOGO.jpg" alt="Kumon of Hicksville">
+    </div>
+    <h1>KUMON ATTENDANCE</h1>
   </header>
 
-  <main class="kiosk-card">
+  <!-- Camera Section -->
+  <main>
     <div class="scanner-wrapper">
+      <div class="scanner-frame">
+        <div class="corner top-left"></div>
+        <div class="corner top-right"></div>
+        <div class="corner bottom-left"></div>
+        <div class="corner bottom-right"></div>
+      </div>
       <div class="laser-line"></div>
       <div id="reader"></div>
     </div>
-
-    <!-- Live Status Banner -->
-    <div id="status-card" class="status-info">Ready to scan...</div>
   </main>
 
-  <script>
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwAQJNDVFMQ1dZOW_ikEepyPc9H0FWfjTpC5M_iv9QeQNevBY1dG8dDxynw1wy60LcV/exec";
+  <!-- Footer Status Section -->
+  <footer>
+    <div id="status-card" class="status-info">
+      <div class="status-title">System Status: <span>[READY]</span></div>
+      <div id="status-sub" class="status-sub">Position QR code in front of the camera</div>
+    </div>
+  </footer>
 
+  <script>
+    // REPLACE WITH YOUR ACTUAL GOOGLE APPS SCRIPT WEB APP URL
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwAQJNDVFMQ1dZOW_ikEepyPc9H0FWfjTpC5M_iv9QeQNevBY1dG8dDxynw1wy60LcV/exec";
     let isScanningPaused = false;
 
-    // Live Clock Update
-    setInterval(() => {
-      document.getElementById("clock").innerText = new Date().toLocaleTimeString();
-    }, 1000);
-
-    // Audio Feedback (Beep Synthesizer)
     function playBeep(freq = 880, type = 'sine', duration = 0.15) {
       try {
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -187,58 +272,56 @@
       }
     }
 
-    // UI Status Banner Controller
-    function showStatus(message, theme = 'info') {
+    function showStatus(titleMsg, subMsg = "", theme = 'info') {
       const card = document.getElementById("status-card");
+      const titleElem = card.querySelector(".status-title");
+      const subElem = document.getElementById("status-sub");
+
       card.className = "status-" + theme;
-      card.innerText = message;
-      card.style.display = "block";
+      titleElem.innerHTML = titleMsg;
+      subElem.innerText = subMsg;
     }
 
-    // QR Code Detection Handler
     function onScanSuccess(decodedText) {
       if (isScanningPaused) return;
 
       isScanningPaused = true;
       playBeep(880, 'sine', 0.12);
-      showStatus("Logging scan...", "info");
+      showStatus("Processing...", "Logging scan into system...", "info");
 
       fetch(`${APPS_SCRIPT_URL}?id=${encodeURIComponent(decodedText)}&mode=kiosk`)
         .then(res => res.json())
         .then(data => {
           if (data.status === "success") {
             playBeep(1200, 'sine', 0.2);
-            showStatus(data.message, "success");
+            showStatus("Welcome!", data.message || "Logged in successfully!", "success");
           } else if (data.status === "duplicate" || data.status === "warning") {
             playBeep(440, 'triangle', 0.25);
-            showStatus(data.message, "warning");
+            showStatus("Notice", data.message || "Already scanned recently.", "warning");
           } else {
             playBeep(220, 'sawtooth', 0.3);
-            showStatus(data.message || "Error processing scan.", "error");
+            showStatus("Error", data.message || "Error processing scan.", "error");
           }
         })
         .catch(err => {
           console.error(err);
           playBeep(220, 'sawtooth', 0.3);
-          showStatus("Connection failed. Try again.", "error");
+          showStatus("Connection Error", "Please try scanning again.", "error");
         })
         .finally(() => {
           setTimeout(() => {
             isScanningPaused = false;
-            showStatus("Ready to scan...", "info");
+            showStatus("System Status: <span>[READY]</span>", "Position QR code in front of the camera", "info");
           }, 3000);
         });
     }
 
-    // Initialize Camera Feed safely
-    window.addEventListener("load", () => {
-      const html5QrcodeScanner = new Html5QrcodeScanner(
-        "reader",
-        { fps: 15, qrbox: { width: 250, height: 250 } },
-        /* verbose= */ false
-      );
-      html5QrcodeScanner.render(onScanSuccess);
-    });
+    const html5QrcodeScanner = new Html5QrcodeScanner(
+      "reader",
+      { fps: 15, qrbox: { width: 260, height: 200 } },
+      /* verbose= */ false
+    );
+    html5QrcodeScanner.render(onScanSuccess);
   </script>
 </body>
 </html>
