@@ -238,24 +238,31 @@
     // Automatically detects device orientation:
     // Uses "user" (front camera) for Landscape/Tablet (Duet 5)
     // Uses "environment" (rear camera) for Mobile/Portrait (Samsung S22/A16)
-    // Automatically selects front camera ("user") for landscape tablets (Duet 5)
-    // and back camera ("environment") for portrait mobile phones (S22 / A16)
-    const isPortrait = window.matchMedia("(orientation: portrait)").matches || window.innerWidth < 600;
-    const selectedFacingMode = isPortrait ? "environment" : "user";
+// Automatically selects front camera ("user") for landscape tablets
+// and back camera ("environment") for portrait mobile phones
+const isPortrait = window.matchMedia("(orientation: portrait)").matches || window.innerWidth < 600;
+const selectedFacingMode = isPortrait ? "environment" : "user";
 
-    const html5QrcodeScanner = new Html5QrcodeScanner(
-      "reader",
-      { 
-        fps: 15, 
-        qrbox: { width: 180, height: 140 },
-        aspectRatio: 1.333333,
-        videoConstraints: {
-          facingMode: selectedFacingMode
-        }
-      },
-      /* verbose= */ false
-    );
-    html5QrcodeScanner.render(onScanSuccess);
+const html5QrcodeScanner = new Html5QrcodeScanner(
+  "reader",
+  {
+    fps: 25,
+    qrbox: { width: 240, height: 240 },
+    aspectRatio: 1.0,
+    experimentalFeatures: {
+      useBarCodeDetectorIfSupported: true
+    },
+    videoConstraints: {
+      facingMode: selectedFacingMode,
+      width: { ideal: 1920 },
+      height: { ideal: 1080 },
+      focusMode: { ideal: "continuous" }
+    }
+  },
+  /* verbose= */ false
+);
+
+html5QrcodeScanner.render(onScanSuccess);
   </script>
 </body>
 </html>
